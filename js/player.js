@@ -14,8 +14,7 @@ var player = (function Player() {
         velocityY += 1.5;// gravity
         posistionY += Math.round(velocityY);
         velocityY *= 0.95;// friction
-
-
+        
         // if player is falling below hill line
         if (posistionY + playerRadius >= playerX.y) {
             jumping = false;
@@ -25,10 +24,11 @@ var player = (function Player() {
 
         //Is thep player jumping?   
         if (ic.spacePressed() && jumping == false) {
-            velocityY -= speed;
+            velocityY -= 30; //speed 
             jumping = true;
         }
     }
+    
     //updates the players (x,y) posistion and velocities
     function update() {
         updateX();
@@ -37,10 +37,10 @@ var player = (function Player() {
 
     //Draw the Player to the canvas
     function draw() {
-        ctx.beginPath();
-        ctx.strokeStyle = "gold";
-        ctx.arc(playerX.x, posistionY, playerRadius, 0, 2 * Math.PI);
-        ctx.stroke();
+        game.getContext().beginPath();
+        game.getContext().strokeStyle = "gold";
+        game.getContext().arc(playerX.x, posistionY, playerRadius, 0, 2 * Math.PI);
+        game.getContext().stroke();
     }
 
     return {

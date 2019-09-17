@@ -3,26 +3,26 @@ var hills = (function Hills() {
     var pts1, pts2, pts3;
 
     function initialize() {
-        pts1 = generatePoints(1, 10, canvas.height / 2);
+        pts1 = generatePoints(1, 10, game.getHeight() / 2);
         pts2 = generatePoints(2, 10, pts1[pts1.length - 1].y);
         pts3 = generatePoints(3, 10, pts2[pts2.length - 1].y);
     }
 
     //Draw the Hills to the canvas from the with the points from buffer 1 
     function draw() {
-        ctx.beginPath();
-        ctx.strokeStyle = "green";
+        game.getContext().beginPath();
+        game.getContext().strokeStyle = "green";
         for (var i = 0; i < pts1.length; i++) {
-            ctx.lineTo(pts1[i].x, pts1[i].y);
-            ctx.moveTo(pts1[i].x, pts1[i].y);
+            game.getContext().lineTo(pts1[i].x, pts1[i].y);
+            game.getContext().moveTo(pts1[i].x, pts1[i].y);
         }
-        ctx.stroke();
+        game.getContext().stroke();
     }
 
     //Function to generate points hills and obstacles
     function generatePoints(numberOfHills, pixelStep, hillStartY) {
         var hills = [];
-        var hillWidth = canvas.width / numberOfHills;
+        var hillWidth = game.getWidth() / numberOfHills;
         var hillSlices = hillWidth / pixelStep;
         var coversionFactor = (2 * Math.PI) / hillWidth;
         for (var i = 0; i < numberOfHills; i++) {
@@ -47,17 +47,17 @@ var hills = (function Hills() {
         }
         if (pts2.length >= 1) {
             var p = pts2.shift();
-            p.x += canvas.width;
+            p.x += game.getWidth();
             pts1.push(p);
         }
         if (pts3.length >= 1) {
             var p = pts3.shift();
-            p.x += canvas.width;
+            p.x += game.getWidth();
             pts2.push(p);
             if (pts3 == undefined || pts3.length == 0) {
                 var hillStartY = p.y;
-                if (hillStartY < canvas.height / 2) {
-                    hillStartY = canvas.height / 2;
+                if (hillStartY < game.getHeight() / 2) {
+                    hillStartY = game.getHeight() / 2;
                 }
                 pts3 = generatePoints(1, 10, hillStartY);
             }
@@ -67,6 +67,7 @@ var hills = (function Hills() {
     function getPoints() {
         return pts1;
     }
+
     return {
         getPoints:getPoints,
         initialize: initialize,

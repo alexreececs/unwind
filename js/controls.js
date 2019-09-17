@@ -54,5 +54,8 @@ var ic = (function InputControl() {
         keyDownHandler: keyDownHandler,
         keyUpHandler: keyUpHandler,
         spacePressed: spacePressed,
+        enterPressed: enterPressed,
+        upArrowPressed: upArrowPressed,
+        downArrowPressed: downArrowPressed,
     }
 })();

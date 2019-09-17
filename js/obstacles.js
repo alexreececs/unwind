@@ -19,10 +19,10 @@ var obstacle = (function Obstacle() {
         if (hills.pts1) {
             for (var i = 0; i < pts1.length; i++) {
                 if (pts1[i].isObstacle) {
-                    ctx.beginPath();
-                    ctx.fillStyle = "red";
-                    ctx.arc(pts1[i].x, pts1[i].y - obstacleRadius, obstacleRadius, 0, 2 * Math.PI);
-                    ctx.fill();
+                    game.getContext().beginPath();
+                    game.getContext().fillStyle = "red";
+                    game.getContext().arc(pts1[i].x, pts1[i].y - obstacleRadius, obstacleRadius, 0, 2 * Math.PI);
+                    game.getContext().fill();
                 }
             }
         }
