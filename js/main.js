@@ -17,13 +17,6 @@ var score = 0;
 //Hill Attributes
 var pts1, pts2, pts3;
 
-//Player Attributes
-var playerPoint; //The point at which the game character is centered around
-var playerRadius = 25;
-var velocityY = 0;
-var posistionY = 0;
-var jumping = false;
-
 //Obstacle Attributes
 var obstacleFrequency = 0.025; //The percentage of which points spawn to be an obstacle
 var obstacleRadius = 15;
@@ -117,37 +110,6 @@ function drawObstacles() {
         }
     }
 }
-//Draw the Player to the canvas
-function drawPlayer() {
-    ctx.beginPath();
-    ctx.fillStyle = "gold";
-    ctx.arc(playerPoint.x, posistionY - playerRadius, playerRadius, 0, 2 * Math.PI);
-    ctx.fill();
-}
-
-//updates the players (x,y) posistion and velocities
-function updatePlayer() {
-    //update the x of the player
-    playerPoint = pts1[Math.floor(pts1.length / 3)];
-
-    velocityY += 1.5;// gravity
-    posistionY += Math.round(velocityY);
-    velocityY *= 0.95;// friction
-
-
-    // if player is falling below hill line
-    if (posistionY >= playerPoint.y) {
-        jumping = false;
-        posistionY = playerPoint.y;
-        velocityY = 0;
-    }
-
-    //Is thep player jumping?   
-    if (ic.spacePressed() && jumping == false) {
-        velocityY -= speed;
-        jumping = true;
-    }
-}
 
 //https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 function collision() {
@@ -175,10 +137,10 @@ function update() {
 
     if (playing && !gameOver) {
         updateScore();
-        updatePlayer();
+        player.update();
         updateHills();
         updateObstacles();
-        collision();
+        // collision();
     }
 }
 
@@ -198,7 +160,7 @@ function draw() {
         drawScore();
         drawHills();
         drawObstacles();
-        drawPlayer();
+        player.draw();
     }
     else {
         ctx.font = "30px Arial";
