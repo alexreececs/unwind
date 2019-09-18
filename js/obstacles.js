@@ -1,5 +1,10 @@
+/*
+    Alexander Reece
+    3447818
+    COMP 486
+    Assignment 2
+*/
 var obstacle = (function Obstacle() {
-
     //Obstacle Attributes
     var _frequency = 0.025; //The percentage of which points spawn to be an obstacle
     var obstacleRadius = 15;

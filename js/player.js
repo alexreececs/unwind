@@ -1,24 +1,44 @@
+/*
+    Alexander Reece
+    3447818
+    COMP 486
+    Assignment 2
+*/
 var player = (function Player() {
-    //Player Attributes
-    var playerX; //The point at which the game character is centered around
-    var playerRadius = 25;
-    var velocityY = 0;
-    var posistionY = 0;
-    var jumping = false;
+    const states = {
+        JUMPING: 'JUMPING',
+        MOVING: 'MOVING',
+        COLLIDED: 'COLLIDED'
+    }
 
-    function updateX() {
-        playerX = hills.getPoints()[Math.floor(hills.getPoints().length / 3)];
+    var _fillStyle;
+    function setFillStyle(fillStyle) {
+        _fillStyle = fillStyle;
+    }
+    //Player Attributes
+    var point; //The point at which the game character is centered around
+    var playerRadius = 25;
+    var velocityY;
+    var posistionY;
+    var jumping;
+
+    function initialize() {
+        _fillStyle = "gold";
+        point = hills.getPoints()[Math.floor(hills.getPoints().length / 3)];
+        posistionY = point.y;
+        velocityY = 0;
+        jumping = false;
     }
 
     function updateY() {
         velocityY += 1.5;// gravity
         posistionY += Math.round(velocityY);
         velocityY *= 0.95;// friction
-        
+
         // if player is falling below hill line
-        if (posistionY + playerRadius >= playerX.y) {
+        if (posistionY + playerRadius >= point.y) {
             jumping = false;
-            posistionY = playerX.y - playerRadius;
+            posistionY = point.y - playerRadius;
             velocityY = 0;
         }
 
@@ -28,22 +48,38 @@ var player = (function Player() {
             jumping = true;
         }
     }
-    
+
     //updates the players (x,y) posistion and velocities
     function update() {
-        updateX();
+        //update the player posistion relative to the hill 
+        point = hills.getPoints()[Math.floor(hills.getPoints().length / 3)];
+        //update the y posistion relative to the velecity
         updateY();
+    }
+
+    //https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+    function collision() {
+        if (nextObstaclePoint) {
+            var circle1 = { radius: playerRadius, x: playerPoint.x, y: posistionY - playerRadius };
+            var circle2 = { radius: obstacleRadius, x: nextObstaclePoint.x, y: nextObstaclePoint.y - obstacleRadius };
+            var dx = circle1.x - circle2.x;
+            var dy = circle1.y - circle2.y;
+            var distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < circle1.radius + circle2.radius) { gameOver = true; playing = false; }
+        }
     }
 
     //Draw the Player to the canvas
     function draw() {
         game.getContext().beginPath();
-        game.getContext().strokeStyle = "gold";
-        game.getContext().arc(playerX.x, posistionY, playerRadius, 0, 2 * Math.PI);
-        game.getContext().stroke();
+        game.getContext().fillStyle = _fillStyle;
+        game.getContext().arc(point.x, posistionY, playerRadius, 0, 2 * Math.PI);
+        game.getContext().fill();
     }
 
     return {
+        setFillStyle: setFillStyle,
+        initialize: initialize,
         draw: draw,
         update: update,
     }

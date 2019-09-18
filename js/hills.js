@@ -1,7 +1,14 @@
+/*
+    Alexander Reece
+    3447818
+    COMP 486
+    Assignment 2
+*/
 var hills = (function Hills() {
     //Hill Attributes
     var pts1, pts2, pts3;
 
+    //var obstacles
     function initialize() {
         pts1 = generatePoints(1, 10, game.getHeight() / 2);
         pts2 = generatePoints(2, 10, pts1[pts1.length - 1].y);
@@ -74,5 +81,4 @@ var hills = (function Hills() {
         draw: draw,
         update: update,
     }
-
 })();

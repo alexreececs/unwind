@@ -4,16 +4,7 @@
     COMP 486
     Assignment 2
 */
-
 var game = (function Game() {
-    //TODO make collision detection work properly
-    //Game Properties
-    var canvas = document.getElementById('gameCanvas'); //the games canvas
-    var ctx = canvas.getContext('2d'); //context of the canvas
-    var gameOver = false;
-    var playing = false;
-    var score = 0;
-
     const states = {
         MAIN_MENU: 'MAIN_MENU',
         CHARACTER_SELECTION: 'CHARACTER_SELECTION',
@@ -21,29 +12,28 @@ var game = (function Game() {
         GAME_OVER: 'GAME_OVER',
     }
 
-    var gameState = states.MAIN_MENU;
+    var gameState;
+    var canvas = document.getElementById('gameCanvas'); //the games canvas
+    var ctx = canvas.getContext('2d'); //context of the canvas
 
-    function drawScore() {
-        getContext().font = "16px Arial";
-        getContext().fillStyle = "green";
-        getContext().fillText("Score: " + score, 0, game.getHeight());
-    }
-    function updateScore() {
-        if (playing) {
-            score++;
-        }
+    function getState() {
+        return gameState;
     }
 
-    //https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-    function collision() {
-        if (nextObstaclePoint) {
-            var circle1 = { radius: playerRadius, x: playerPoint.x, y: posistionY - playerRadius };
-            var circle2 = { radius: obstacleRadius, x: nextObstaclePoint.x, y: nextObstaclePoint.y - obstacleRadius };
-            var dx = circle1.x - circle2.x;
-            var dy = circle1.y - circle2.y;
-            var distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < circle1.radius + circle2.radius) { gameOver = true; playing = false; }
-        }
+    function setState(state) {
+        gameState = state;
+    }
+
+    function getContext() {
+        return ctx;
+    }
+
+    function getHeight() {
+        return canvas.height;
+    }
+
+    function getWidth() {
+        return canvas.width;
     }
 
     //function that updates game state
@@ -51,18 +41,15 @@ var game = (function Game() {
         //State machine for the game
         switch (gameState) {
             case states.MAIN_MENU:
+                menu.updateMainMenu();
                 if (ic.enterPressed()) {
                     gameState = states.CHARACTER_SELECTION;
                 }
                 break;
             case states.CHARACTER_SELECTION:
+                menu.updateCharacterSelect();
                 if (ic.spacePressed()) {
                     gameState = states.PLAYING;
-                    //initilize game variables fof the state transision
-                    hills.initialize();
-                    playing = true;
-                    gameOver = false;
-                    score = 0;
                 }
                 break;
             case states.PLAYING:
@@ -77,7 +64,7 @@ var game = (function Game() {
     }
 
     function updateGame() {
-        updateScore();
+        score.update();
         hills.update();
         player.update();
         obstacle.update();
@@ -96,7 +83,7 @@ var game = (function Game() {
                 menu.drawCharacterSelect();
                 break;
             case states.PLAYING:
-                drawScore();
+                score.draw();
                 hills.draw();
                 obstacle.draw();
                 player.draw();
@@ -118,30 +105,32 @@ var game = (function Game() {
         draw();
     }
 
+    function initialize() {
+        gameState = states.MAIN_MENU;
+        score.initialize();
+        hills.initialize();
+        player.initialize();
+    }
+    //Initialize game states and start the loop 
     function start() {
-        //Handlers
+        //Initialize Game state and objects
+
+        initialize();
+        //Event Handlers
         document.addEventListener("keydown", ic.keyDownHandler, false);
         document.addEventListener("keyup", ic.keyUpHandler, false);
-        //start the game loop
+
+        //Start the game loop
         setInterval(() => { requestAnimationFrame(loop); }, 1000 / 33);
     }
 
-    function getContext() {
-        return ctx;
-    }
-
-    function getHeight() {
-        return canvas.height;
-    }
-
-    function getWidth() {
-        return canvas.width;
-    }
     return {
         start: start,
+        states: states,
+        getState: getState,
+        setState: setState,
         getContext: getContext,
         getHeight: getHeight,
         getWidth: getWidth,
     }
-    
 })();
